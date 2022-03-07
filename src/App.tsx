@@ -1,26 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+/* eslint-disable no-undef */
+import 'moment/locale/zh-cn'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+
+import { ConfigProvider } from 'antd'
+import Home from './page/Home'
+import Login from './page/Login'
+import NoPermission from './page/result/NoPermission'
+import NotFound from './page/result/NotFound'
+// import { PrivateRoute } from './PrivateRoute'
+import React from 'react'
+import { allLang } from './util/emit'
+import { useSelector } from 'react-redux'
+
+interface User {
+    lists: string[]
+    num: number
+    test: string
+    locale: string
 }
 
-export default App;
+// moment.locale('en')
+function App() {
+    const locale = useSelector((state: { user: User }) => state.user.locale)
+    return (
+        <ConfigProvider locale={allLang[locale]}>
+            <Router>
+                <Switch>
+                    <Route path="/login" component={Login}></Route>
+                    <Route path="/404" component={NotFound}></Route>
+                    <Route path="/403" component={NoPermission}></Route>
+                    <Route path="/" component={Home}></Route>
+                </Switch>
+            </Router>
+        </ConfigProvider>
+    )
+}
+
+export default App
